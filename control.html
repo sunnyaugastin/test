@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Copy and Format</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+        #output {
+            margin-top: 10px;
+            padding: 10px;
+            border: 2px solid #000; /* Black border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f9f9f9; /* Light gray background */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="b5">B5:</label>
+        <input type="text" id="b5" name="b5">
+
+        <label for="c5">C5:</label>
+        <input type="text" id="c5" name="c5">
+
+        <label for="d5">D5:</label>
+        <input type="text" id="d5" name="d5">
+
+        <button onclick="copyAndFormat()">Copy and Format</button>
+
+        <h2>Output:</h2>
+        <p id="output"></p>
+    </div>
+
+    <script>
+        function copyAndFormat() {
+            // Get values from input fields
+            var b5 = document.getElementById('b5').value;
+            var c5 = document.getElementById('c5').value;
+            var d5 = document.getElementById('d5').value;
+            
+            // Format the result based on the presence of values
+            var result;
+            if (b5 !== "" && c5 !== "" && d5 !== "") {
+                result = b5 + " " + c5 + ":" + d5;
+            } else if (b5 !== "" && c5 !== "") {
+                result = b5 + " " + c5;
+            } else {
+                result = b5;
+            }
+            
+            // Set the formatted value into the output element
+            document.getElementById('output').textContent = result;
+        }
+    </script>
+</body>
+</html>
