@@ -7,36 +7,37 @@
 
         #displayText {
             position: fixed;
-            bottom: 5%; /* Lift it up slightly from the bottom */
+            bottom: 5%;
             left: 5%;
             background: rgba(0, 0, 0, 0.7);
-            color: #ffffff; /* White text */
-            padding: 10px 15px; /* Adjusted padding for a minimal look */
-            border-radius: 25px; /* Slightly rounded corners */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-            font-size: 17px; /* Size based on preference */
-            font-family: "Mallanna", sans-serif; /* Mallanna font */
-            font-weight: 400; /* Regular font weight */
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 17px;
+            font-family: "Mallanna", sans-serif;
+            font-weight: 400;
             z-index: 9999;
-            max-width: 90%; /* Prevents overflow */
-            text-align: center; /* Center align text */
-            white-space: nowrap; /* Prevents text from wrapping */
-            overflow: hidden; /* Hides overflowing text */
-            text-overflow: ellipsis; /* Adds ellipsis for overflow text */
-            opacity: 0; /* Start hidden */
-            transition: opacity 1s ease-in-out; /* Fade transition */
+            max-width: 90%;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
 
-        /* Added class to handle hiding */
         .hidden {
             display: none;
         }
     </style>
 </head>
 <body>
-    <div id="displayText" class="mallanna-regular hidden">Loading...</div>
+    <div id="displayText" class="hidden">Loading...</div>
     <script>
         let isFadingOut = false;
+        let isTextActive = false;
+        let textDisplayDuration = 60000; // Duration in milliseconds (1 minute)
 
         async function fetchText() {
             try {
@@ -44,7 +45,7 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 const text = data.text;
-                
+
                 const displayElement = document.getElementById('displayText');
 
                 if (text.trim()) {
@@ -52,6 +53,14 @@
                     displayElement.classList.remove('hidden');
                     displayElement.style.opacity = 1; // Fade in
                     isFadingOut = false;
+                    isTextActive = true;
+
+                    // Set timeout to start fading out after text display duration
+                    setTimeout(() => {
+                        if (isTextActive) {
+                            fadeOut();
+                        }
+                    }, textDisplayDuration);
                 } else {
                     if (!isFadingOut) {
                         fadeOut();
@@ -64,6 +73,14 @@
                 displayElement.classList.remove('hidden');
                 displayElement.style.opacity = 1; // Ensure visible
                 isFadingOut = false;
+                isTextActive = true;
+
+                // Set timeout to start fading out after 1 minute
+                setTimeout(() => {
+                    if (isTextActive) {
+                        fadeOut();
+                    }
+                }, textDisplayDuration);
             }
         }
 
@@ -80,7 +97,7 @@
                     displayElement.textContent = ''; // Clear text after fade-out
                     displayElement.classList.add('hidden');
                     isFadingOut = true; // Set flag to prevent multiple fades
-                    setTimeout(fetchText, 1000); // Wait before fetching new text
+                    isTextActive = false; // Reset text active flag
                 }
             }
 
