@@ -27,6 +27,8 @@
 <body>
     <div id="displayText"></div>
     <script>
+        let typingInterval;
+
         async function fetchText() {
             try {
                 const response = await fetch('https://script.google.com/macros/s/AKfycbzLyMbZQHqpH8GF8id-h8xDnWrnWM3d5y2j4orh92uA6F_tkno-eAqQFgHXwV6InHvz/exec');
@@ -35,12 +37,14 @@
                 const text = data.text;
                 
                 if (text.trim()) {
+                    clearTimeout(typingInterval); // Clear any existing typing effect
                     typeText(text);
                 } else {
                     fadeOut();
                 }
             } catch (error) {
                 console.error('Error fetching text:', error);
+                clearTimeout(typingInterval); // Clear any existing typing effect
                 typeText('Error loading text');
             }
         }
@@ -55,7 +59,7 @@
                 if (index < text.length) {
                     displayElement.textContent += text[index];
                     index++;
-                    setTimeout(typeNextChar, 50); // Adjust typing speed here
+                    typingInterval = setTimeout(typeNextChar, 50); // Adjust typing speed here
                 }
             }
 
