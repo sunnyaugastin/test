@@ -3,10 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Page</title>
+    <title>Lower Third Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .control-panel {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .control-panel label {
+            margin-right: 10px;
+        }
+
+        .control-panel input {
+            margin-right: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .control-panel button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .control-panel button:hover {
+            background-color: #0056b3;
+        }
+
+        .lower-third {
+            display: none;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            transition: all 0.5s ease;
+        }
+
+        .lower-third.show {
+            display: block;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://mblsraormyrrkcearhki.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ibHNyYW9ybXlycmtjZWFyaGtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMwMDU1NzcsImV4cCI6MjAzODU4MTU3N30.y5KQYg1R1A3bqdbRakOT8uWkxYnvZQKGQP8FIA2A0Ng';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function updateLowerThird() {
+            const lowerThirdText = document.getElementById('lower-third-text').value;
+            await supabase
+                .from('messages')
+                .upsert({ id: 1, text: lowerThirdText });
+        }
+
+        async function fetchAndDisplayLowerThird() {
+            const { data } = await supabase
+                .from('messages')
+                .select('text')
+                .eq('id', 1)
+                .single();
+            const lowerThirdContent = document.getElementById('lower-third-content');
+            const lowerThird = document.getElementById('lower-third');
+
+            if (data && data.text) {
+                lowerThirdContent.textContent = data.text;
+                lowerThird.classList.add('show');
+                setTimeout(() => {
+                    lowerThird.classList.remove('show');
+                }, 5000); // Hide after 5 seconds
+            }
+        }
+
+        // Subscribe to real-time changes
+        supabase
+            .from('messages')
+            .on('INSERT', payload => {
+                fetchAndDisplayLowerThird();
+            })
+            .on('UPDATE', payload => {
+                fetchAndDisplayLowerThird();
+            })
+            .subscribe();
+
+        // Fetch initial data
+        fetchAndDisplayLowerThird();
+    </script>
 </head>
 <body>
-    <h1>Hello from GitHub Pages!</h1>
-    <a href="control.html">Go to Control Page</a>
+    <div class="control-panel">
+        <label for="lower-third-text">Enter Text:</label>
+        <input type="text" id="lower-third-text" placeholder="Type your text here">
+        <button onclick="updateLowerThird()">Update</button>
+    </div>
+    <div class="lower-third" id="lower-third">
+        <p id="lower-third-content"></p>
+    </div>
 </body>
 </html>
