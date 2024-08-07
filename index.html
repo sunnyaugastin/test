@@ -24,13 +24,14 @@
             overflow: hidden; /* Hides overflowing text */
             text-overflow: ellipsis; /* Adds ellipsis for overflow text */
             opacity: 0; /* Start hidden */
-            transition: opacity 1s ease-in-out; /* Fade transition */
         }
     </style>
 </head>
 <body>
-    <div id="displayText" class="mallanna-regular">Loading...</div>
+    <div id="displayText" class="mallanna-regular"></div>
     <script>
+        let typingDone = false; // Flag to indicate if typing is complete
+
         async function fetchText() {
             try {
                 const response = await fetch('https://script.google.com/macros/s/AKfycbzLyMbZQHqpH8GF8id-h8xDnWrnWM3d5y2j4orh92uA6F_tkno-eAqQFgHXwV6InHvz/exec');
@@ -39,13 +40,19 @@
                 const text = data.text;
                 
                 if (text.trim()) {
-                    typeText(text);
+                    if (!typingDone) {
+                        typeText(text);
+                    } else {
+                        document.getElementById('displayText').textContent = text;
+                        document.getElementById('displayText').style.opacity = 1; // Ensure visible
+                    }
                 } else {
                     fadeOut();
                 }
             } catch (error) {
                 console.error('Error fetching text:', error);
-                typeText('Error loading text');
+                document.getElementById('displayText').textContent = 'Error loading text';
+                document.getElementById('displayText').style.opacity = 1; // Ensure visible
             }
         }
 
@@ -61,7 +68,7 @@
                     index++;
                     setTimeout(typeNextChar, 50); // Adjust typing speed here
                 } else {
-                    // Restart typing effect after completion
+                    typingDone = true; // Set flag to indicate typing is complete
                     setTimeout(() => fadeOut(), 3000); // Display text for 3 seconds before fading out
                 }
             }
@@ -80,6 +87,7 @@
                     requestAnimationFrame(fade);
                 } else {
                     displayElement.textContent = ''; // Clear text after fade-out
+                    typingDone = false; // Reset typingDone flag
                     fetchText(); // Fetch new text and restart typing effect
                 }
             }
