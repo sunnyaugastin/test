@@ -11,7 +11,6 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #2c2c2c;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,7 +24,7 @@
             left: 5%;
             display: flex;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.8); /* Black background with transparency */
             border-radius: 25px;
             color: white;
             font-family: "Mallanna", sans-serif;
@@ -47,7 +46,8 @@
         }
 
         .lower-third .label {
-            background-color: #fbc02d;
+            background-color: #fbc02d; /* Yellow background for the label */
+            color: #000000; /* Black text color for visibility */
             padding: 5px 10px;
             border-radius: 3px 0 0 3px;
             font-weight: bold;
@@ -56,15 +56,15 @@
         .lower-third .text {
             margin-left: 0;
             padding: 5px 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-left: 2px solid #fbc02d;
+            background-color: rgba(0, 0, 0, 0.8); /* Black background with transparency */
+            border-left: 2px solid #fbc02d; /* Yellow border */
         }
     </style>
 </head>
 
 <body>
     <div class="lower-third" id="lowerThird">
-        <div class="label" style="color: #000000;">LOWER THIRD</div>
+        <div class="label">LOWER THIRD</div>
         <div class="text" id="displayText">Loading...</div>
     </div>
 
